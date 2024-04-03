@@ -7,11 +7,35 @@
 
 import UIKit
 
-let patientID = "4c516423-b638-4066-8646-bc431ce3fbf0"
+
 
 struct WebService {
 
     private let baseURL = "http://localhost:3000"
+    
+    func logoutPatient() async throws -> Bool {
+        let endpoint = baseURL + "/auth/logout"
+        guard let url = URL(string: endpoint) else {
+            print("Erro na URL!")
+            return false
+        }
+        
+        guard let token = KeychainHelper.get(for: "app-vollmed-token") else {
+            print("Token nao encontrado")
+            return false
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+            return true
+        }
+            return false
+    }
 
     func loginPatient(email: String, password: String) async throws -> LoginResponse? {
         let endpoint = baseURL + "/auth/login"
@@ -67,7 +91,12 @@ struct WebService {
             print("Erro na URL!")
             return false
         }
-
+        guard let token = KeychainHelper.get(for: "app-vollmed-token") else{
+            print("Token Nao Informado!")
+            return false
+        }
+        
+        
         let requestData: [String: String] = ["motivoCancelamento": reasonToCancel]
 
         guard let jsonData = try? JSONSerialization.data(withJSONObject: requestData) else {
@@ -78,6 +107,7 @@ struct WebService {
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpBody = jsonData
 
         let (_, response) = try await URLSession.shared.data(for: request)
@@ -93,9 +123,15 @@ struct WebService {
         let endpoint = baseURL + "/consulta/" + appointmentID
         guard let url = URL(string: endpoint) else {
             print("Erro na URL!")
-            throw URLError(.badURL)
+            return nil
         }
 
+        guard let token = KeychainHelper.get(for: "app-vollmed-token") else {
+            print("Token Nao Informado")
+            return nil
+        }
+        
+        
         let requestData: [String: String] = ["data": date]
 
         do {
@@ -103,6 +139,7 @@ struct WebService {
             var request = URLRequest(url: url)
             request.httpMethod = "PATCH"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             request.httpBody = jsonData
 
             let (data, _) = try await URLSession.shared.data(for: request)
@@ -118,29 +155,50 @@ struct WebService {
 
     func getAllAppointmentFromPatient(patientID: String) async throws -> [Appointment]? {
         let endpoint = baseURL + "/paciente/" + patientID + "/consultas"
+        
+        guard let token = KeychainHelper.get(for: "app-vollmed-token") else {
+            print("Token não Informado!")
+            return nil
+        }
+        
+        
         guard let url = URL(string: endpoint) else {
             print("Erro na URL!")
             throw URLError(.badURL)
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
 
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await URLSession.shared.data(for: request)
+        
         let appointment = try JSONDecoder().decode([Appointment].self, from: data)
+        
         return appointment
     }
 
-    func scheduleAppointment(specialistID: String, patientID: String, date: String) async throws -> ScheduleAppointmentResponse {
+    func scheduleAppointment(specialistID: String, patientID: String, date: String) async throws -> ScheduleAppointmentResponse? {
         let endpoint = baseURL + "/consulta"
         guard let url = URL(string: endpoint) else {
             print("Erro na URL!")
-            throw URLError(.badURL)
+           return nil
         }
 
+        guard let token = KeychainHelper.get(for: "app-vollmed-token") else {
+            print("Token não Informado!")
+            return nil
+        }
+        
+        
         let appointment = ScheduleAppointmentRequest(specialist: specialistID, patient: patientID, date: date)
         let jsonData = try JSONEncoder().encode(appointment)
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpBody = jsonData
 
         let (data, _) = try await URLSession.shared.data(for: request)
@@ -177,7 +235,9 @@ struct WebService {
         }
 
         let (data, _) = try await URLSession.shared.data(from: url)
+        
         let specialists = try JSONDecoder().decode([Specialist].self, from: data)
+        
         return specialists
     }
 }

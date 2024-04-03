@@ -50,6 +50,8 @@ struct ScheduleAppointmentView: View {
     }
     
     func scheduleAppointment() async {
+        guard let patientID = KeychainHelper.get(for: "app-vollmed-patient-id") else{return}
+        
         do {
             _ = try await service.scheduleAppointment(specialistID: specialistID, patientID: patientID, date: selectedDate.convertToString())
             isAppointmentScheduled = true

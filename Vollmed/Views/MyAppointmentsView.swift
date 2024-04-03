@@ -13,6 +13,10 @@ struct MyAppointmentsView: View {
     @State private var appointments: [Appointment]? = []
     
     func getAllAppointments() async {
+        
+        guard let patientID = KeychainHelper.get(for: "app-vollmed-patient-id") else{
+            return
+        }
         do {
             let appointments = try await
             service.getAllAppointmentFromPatient(patientID:patientID)

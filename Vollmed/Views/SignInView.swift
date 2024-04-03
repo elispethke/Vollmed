@@ -19,7 +19,8 @@ struct SignInView: View {
        
         do {
             if let response = try await service.loginPatient(email: email, password: password) {
-                print("Sucesso \(response)")
+                KeychainHelper.save(value: response.token, key: "app-vollmed-token")
+                KeychainHelper.save(value: response.id, key: "app-vollmed-patient-id")
             } else {
                 showAlert = true
             }

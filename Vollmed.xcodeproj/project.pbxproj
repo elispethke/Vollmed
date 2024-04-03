@@ -17,6 +17,8 @@
 		C2133BE52AF06DC50016FF7B /* SpecialistCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2133BE42AF06DC50016FF7B /* SpecialistCardView.swift */; };
 		C2133BE72AF06E750016FF7B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2133BE62AF06E750016FF7B /* ContentView.swift */; };
 		C21B0A2C2B9724F600D5CEB4 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21B0A2B2B9724F600D5CEB4 /* Login.swift */; };
+		C2246A012BB2154000FB0F13 /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2246A002BB2154000FB0F13 /* UserDefaultsHelper.swift */; };
+		C2246A032BB30E2100FB0F13 /* keychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2246A022BB30E2100FB0F13 /* keychainHelper.swift */; };
 		C230A0AB2B68C271007D33AF /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C230A0AA2B68C271007D33AF /* Date+.swift */; };
 		C230A0AD2B68C697007D33AF /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = C230A0AC2B68C697007D33AF /* String+.swift */; };
 		C230A0AF2B68CCCE007D33AF /* scheduleAppointment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C230A0AE2B68CCCE007D33AF /* scheduleAppointment.swift */; };
@@ -41,6 +43,8 @@
 		C2133BE42AF06DC50016FF7B /* SpecialistCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialistCardView.swift; sourceTree = "<group>"; };
 		C2133BE62AF06E750016FF7B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C21B0A2B2B9724F600D5CEB4 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		C2246A002BB2154000FB0F13 /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
+		C2246A022BB30E2100FB0F13 /* keychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keychainHelper.swift; sourceTree = "<group>"; };
 		C230A0AA2B68C271007D33AF /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		C230A0AC2B68C697007D33AF /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		C230A0AE2B68CCCE007D33AF /* scheduleAppointment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scheduleAppointment.swift; sourceTree = "<group>"; };
@@ -103,7 +107,10 @@
 		484BEEFB2AB0F56C0033C07A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				C230A0AC2B68C697007D33AF /* String+.swift */,
 				484BEEFE2AB0F59D0033C07A /* WebService.swift */,
+				C2246A002BB2154000FB0F13 /* UserDefaultsHelper.swift */,
+				C2246A022BB30E2100FB0F13 /* keychainHelper.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -128,7 +135,6 @@
 			isa = PBXGroup;
 			children = (
 				C230A0AA2B68C271007D33AF /* Date+.swift */,
-				C230A0AC2B68C697007D33AF /* String+.swift */,
 				484BEEFB2AB0F56C0033C07A /* Services */,
 				484BEEFA2AB0F5680033C07A /* Models */,
 				484BEEF82AB0F55F0033C07A /* Views */,
@@ -220,12 +226,14 @@
 				C291FF5F2B7CDA090086559C /* Appointment.swift in Sources */,
 				C21B0A2C2B9724F600D5CEB4 /* Login.swift in Sources */,
 				C230A0AB2B68C271007D33AF /* Date+.swift in Sources */,
+				C2246A032BB30E2100FB0F13 /* keychainHelper.swift in Sources */,
 				484BEEFD2AB0F5750033C07A /* Specialist.swift in Sources */,
 				C230A0AD2B68C697007D33AF /* String+.swift in Sources */,
 				C230A0AF2B68CCCE007D33AF /* scheduleAppointment.swift in Sources */,
 				C2133BE72AF06E750016FF7B /* ContentView.swift in Sources */,
 				C291FF632B8386DC0086559C /* CancelAppointmentView.swift in Sources */,
 				C2133BE52AF06DC50016FF7B /* SpecialistCardView.swift in Sources */,
+				C2246A012BB2154000FB0F13 /* UserDefaultsHelper.swift in Sources */,
 				484BEEFF2AB0F59D0033C07A /* WebService.swift in Sources */,
 				C291FF652B866CA70086559C /* SignInView.swift in Sources */,
 				C27AC3E52B99F4210025B779 /* Patient.swift in Sources */,

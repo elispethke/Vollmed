@@ -23,6 +23,21 @@ struct HomeView: View {
         }
     }
 
+    func logout() async {
+        
+        do{
+            let logoutSuccefull = try await service.logoutPatient()
+            if logoutSuccefull {
+                KeychainHelper.remove(for: "app-vollmed-token")
+                KeychainHelper.remove(for: "app-vollmed-patient-id")
+            }
+            
+        } catch {
+            print("Ocorreu um erro no logout \(error)")
+        }
+    
+    }
+    
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -54,6 +69,24 @@ struct HomeView: View {
         .onAppear {
             Task {
                 await getSpecialists()
+            }
+        }
+        
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    Task {
+                        await logout()
+                    }
+                }, label: {
+                    HStack(spacing: 2){
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                        Text("Logout")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                            .background(Color.red)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)                    }
+                })
             }
         }
     }
