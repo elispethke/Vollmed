@@ -11,15 +11,15 @@ import SwiftUI
 struct ScheduleAppointmentView: View {
     
     let service = WebService()
-    
+    var authManager = AuthenticationManager.shared
+
     var specialistID: String
     var isRescheduleView: Bool
     var appointmentID: String?
     
     @State private var selectedDate = Date()
     @State private var showAlert = false
-    @State private var isAppointmentScheduled = false 
-    @Environment(\.presentationMode) var presentationMode
+    @State private var isAppointmentScheduled = false
     
     init(specialistID: String, isRescheduleView: Bool = false, appointmentID: String? = nil) {
         self.specialistID = specialistID
@@ -28,34 +28,33 @@ struct ScheduleAppointmentView: View {
     }
     
     func rescheduleAppointment() async {
-        guard let appointmentID = appointmentID else {
+        guard let appointmentID else {
             print("Houve um erro ao obter o ID da consulta")
             return
         }
-        
         do {
             if let _ = try await service.rescheduleAppointment(appointmentID: appointmentID, date: selectedDate.convertToString()) {
-                      
-                      isAppointmentScheduled = true
+                isAppointmentScheduled = true
             } else {
-                
                 isAppointmentScheduled = false
             }
-            
         } catch {
+            print("Ocorreu um erro ao remarcar consulta: \(error)")
             isAppointmentScheduled = false
-            print("Ocorreu um erro ao agendar consulta: \(error)")
         }
         showAlert = true
     }
     
     func scheduleAppointment() async {
-        guard let patientID = KeychainHelper.get(for: "app-vollmed-patient-id") else{return}
-        
+        guard let patientID = authManager.patientID else {
+            return
+        }
         do {
-            _ = try await service.scheduleAppointment(specialistID: specialistID, patientID: patientID, date: selectedDate.convertToString())
-            isAppointmentScheduled = true
-            
+            if let _ = try await  service.scheduleAppointment(specialistID: specialistID, patientID: patientID, date: selectedDate.convertToString()) {
+                isAppointmentScheduled = true
+            } else {
+                isAppointmentScheduled = false
+            }
         } catch {
             isAppointmentScheduled = false
             print("Ocorreu um erro ao agendar consulta: \(error)")
@@ -65,14 +64,14 @@ struct ScheduleAppointmentView: View {
     
     var body: some View {
         VStack {
-            Text("Selecione a Data e Horário da Consulta")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.accentColor)
+            Text("Selecione a data e o horário da consulta")
+                .font(.title3)
+                .bold()
+                .foregroundStyle(.accent)
                 .multilineTextAlignment(.center)
                 .padding(.top)
             
-            DatePicker("Escolha a Data da Consulta", selection: $selectedDate, in: Date()...)
+            DatePicker("Escolha a data da consulta", selection: $selectedDate, in: Date()...)
                 .datePickerStyle(.graphical)
             
             Button(action: {
@@ -82,35 +81,30 @@ struct ScheduleAppointmentView: View {
                     } else {
                         await scheduleAppointment()
                     }
-                    
                 }
             }, label: {
-                ButtonView(text: isRescheduleView ? "Reagendar Consulta" : "Agendar Consulta")
+                ButtonView(text: isRescheduleView ? "Reagendar consulta" : "Agendar consulta")
             })
-            
         }
         .padding()
-        .navigationTitle(isRescheduleView ? "Reagendar Consulta" : "Agendar Consulta")
+        .navigationTitle(isRescheduleView ? "Reagendar consulta" : "Agendar consulta")
         .navigationBarTitleDisplayMode(.large)
-        .onAppear{
+        .onAppear {
             UIDatePicker.appearance().minuteInterval = 15
         }
-        .alert("Sucesso!", isPresented: $showAlert) {
-            Button(action: {presentationMode.wrappedValue.dismiss()}, label: {
-                Text("OK")
+        .alert(isAppointmentScheduled ? "Sucesso!" : "Ops, algo deu errado!", isPresented: $showAlert, presenting: isAppointmentScheduled) { _ in
+            Button(action: {}, label: {
+                Text("Ok")
             })
-        } message: {
-            if isAppointmentScheduled {
-                Text("A Consulta foi \(isRescheduleView ? "Reagendada" : "Agendada") com Sucesso")
+        } message: { isScheduled in
+            if isScheduled {
+                Text("A consulta foi \(isRescheduleView ? "reagendada" : "agendada") com sucesso!")
             } else {
-                Text("Algo deu errado ao \(isRescheduleView ? "Reagendar" : "Agendar") sua consulta, por favor tente novamente, ou entre em contato com a clínica.")
+                Text("Houve um erro ao \(isRescheduleView ? "reagendar" : "agendar") sua consulta. Por favor tente novamente ou entre em contato via telefone.")
             }
         }
-        
     }
 }
-
-
 
 #Preview {
     ScheduleAppointmentView(specialistID: "123")

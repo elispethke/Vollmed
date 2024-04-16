@@ -9,40 +9,36 @@ import SwiftUI
 struct HomeView: View {
     
     let service = WebService()
+    var authManager = AuthenticationManager.shared
     
     @State private var specialists: [Specialist] = []
     
     func getSpecialists() async {
         do {
             if let specialists = try await service.getAllSpecialists() {
-                print(specialists)
                 self.specialists = specialists
             }
         } catch {
             print("Ocorreu um erro ao obter os especialistas: \(error)")
         }
     }
-
+    
     func logout() async {
-        
-        do{
-            let logoutSuccefull = try await service.logoutPatient()
-            if logoutSuccefull {
-                KeychainHelper.remove(for: "app-vollmed-token")
-                KeychainHelper.remove(for: "app-vollmed-patient-id")
+        do {
+            let logoutSuccessful = try await service.logoutPatient()
+            if logoutSuccessful {
+                authManager.removeToken()
+                authManager.removePatientID()
             }
-            
         } catch {
-            print("Ocorreu um erro no logout \(error)")
+            print("Ocorreu um erro no logout: \(error)")
         }
-    
     }
-    
     
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack {
-                Image("Logo")
+                Image(.logo)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 200)
@@ -50,7 +46,7 @@ struct HomeView: View {
                 Text("Boas-vindas!")
                     .font(.title2)
                     .bold()
-                    .foregroundColor(Color("LightBlue"))
+                    .foregroundColor(Color(.lightBlue))
                 Text("Veja abaixo os especialistas da Vollmed disponíveis e marque já a sua consulta!")
                     .font(.title3)
                     .bold()
@@ -65,13 +61,11 @@ struct HomeView: View {
             .padding(.horizontal)
         }
         .padding(.top)
-        
         .onAppear {
             Task {
                 await getSpecialists()
             }
         }
-        
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
@@ -79,21 +73,16 @@ struct HomeView: View {
                         await logout()
                     }
                 }, label: {
-                    HStack(spacing: 2){
+                    HStack(spacing: 2) {
                         Image(systemName: "rectangle.portrait.and.arrow.right")
                         Text("Logout")
-                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                            .background(Color.red)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)                    }
+                    }
                 })
             }
         }
     }
 }
 
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
-    }
+#Preview {
+    HomeView()
 }
