@@ -6,7 +6,7 @@
 //
 
 import Foundation
- 
+
 struct LoginRequest: Codable {
     let email: String
     let password: String
@@ -22,13 +22,3 @@ struct LoginResponse: Identifiable, Codable {
     let id: String
     let token: String
 }
-
-struct User: Decodable {
-    let auth: String
-    let id: String
-    let token: String
-    
-    
-    
-}
-

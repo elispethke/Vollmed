@@ -9,17 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @AppStorage("token") var token: String = ""
+    @ObservedObject var authManager = AuthenticationManager.shared
     
     var body: some View {
         
-        if token.isEmpty {
+        if authManager.token == nil {
             NavigationStack {
                 SignInView()
             }
         } else {
-            TabView{
-                NavigationStack{
+            TabView {
+                NavigationStack {
                     HomeView()
                 }
                 .tabItem {
@@ -29,12 +29,12 @@ struct ContentView: View {
                     )
                 }
                 
-                NavigationStack{
+                NavigationStack {
                     MyAppointmentsView()
                 }
                 .tabItem {
                     Label(
-                        title: { Text("Minhas Consultas") },
+                        title: { Text("Minhas consultas") },
                         icon: { Image(systemName: "calendar") }
                     )
                 }
@@ -43,10 +43,6 @@ struct ContentView: View {
     }
 }
 
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }

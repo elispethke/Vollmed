@@ -2,8 +2,9 @@
 //  SignUpView.swift
 //  Vollmed
 //
-//  Created by Elisangela Pethke on 21.02.24.
+//  Created by Elisangela Pethke on 03.05.24.
 //
+
 import SwiftUI
 
 struct SignUpView: View {
@@ -136,46 +137,38 @@ struct SignUpView: View {
                 }, label: {
                     ButtonView(text: "Cadastrar")
                 })
-               
-                HStack{
-                    
-                    Text("Do you have an account?")
-                        .foregroundStyle(.accent)
+                
+                NavigationLink {
+                    SignInView()
+                } label: {
+                    Text("Já possui uma conta? Faça o login!")
                         .bold()
-                        .padding(5)
-                        
-                    NavigationLink {
-                        SignInView()
-                    } label: {
-                        Text("Sign in here")
-                        .foregroundStyle(.blue)
-                        
-                    }
-
+                        .foregroundStyle(.accent)
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
         }
         .navigationBarBackButtonHidden()
-               .padding()
-               .alert(isPatientRegistered ? "Sucesso!" : "Ops, algo deu errado!", isPresented: $showAlert, presenting: $isPatientRegistered) { _ in
-                   Button(action: {
-                       navigateToSignInView = true
-                   }, label: {
-                       Text("Ok")
-                   })
-               } message: { _ in
-                   if isPatientRegistered {
-                       Text("O paciente foi criado com sucesso!")
-                   } else {
-                       Text("Houve um erro ao cadastrar o paciente. Por favor tente novamente.")
-                   }
-               }
-               .navigationDestination(isPresented: $navigateToSignInView) {
-                   SignInView()
-               }
-           }
-       }
+        .padding()
+        .alert(isPatientRegistered ? "Sucesso!" : "Ops, algo deu errado!", isPresented: $showAlert, presenting: $isPatientRegistered) { _ in
+            Button(action: {
+                navigateToSignInView = true
+            }, label: {
+                Text("Ok")
+            })
+        } message: { _ in
+            if isPatientRegistered {
+                Text("O paciente foi criado com sucesso!")
+            } else {
+                Text("Houve um erro ao cadastrar o paciente. Por favor tente novamente.")
+            }
+        }
+        .navigationDestination(isPresented: $navigateToSignInView) {
+            SignInView()
+        }
+    }
+}
 
-       #Preview {
-           SignUpView()
-       }
+#Preview {
+    SignUpView()
+}

@@ -27,15 +27,12 @@ struct ButtonView: View {
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(buttonType == .primary ? Color.accentColor : Color("cancel"))
+            .background(buttonType == .primary ? Color.accentColor : Color(.cancel))
             .cornerRadius(12)
             .padding(.top, 8)
     }
 }
 
-
-struct ButtonView_Previews: PreviewProvider {
-    static var previews: some View {
-        ButtonView(text: "Agendar consulta")
-    }
+#Preview {
+    ButtonView(text: "Agendar consulta")
 }

@@ -2,9 +2,8 @@
 //  ScheduleAppointmentView.swift
 //  Vollmed
 //
-//  Created by Elisangela Pethke on 23.01.24.
+//  Created by Elisangela Pethke on 03.05.24.
 //
-
 
 import SwiftUI
 

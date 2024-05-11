@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct SpecialistCardView: View {
+   
+    
     
     var specialist: Specialist
     var appointment: Appointment?
@@ -29,7 +31,7 @@ struct SpecialistCardView: View {
         VStack(alignment: .leading) {
             HStack(spacing: 16.0) {
                 
-                if let specialistImage {
+                if let specialistImage = specialistImage {
                     Image(uiImage: specialistImage)
                         .resizable()
                         .scaledToFill()
@@ -42,9 +44,10 @@ struct SpecialistCardView: View {
                         .font(.title3)
                         .bold()
                     Text(specialist.specialty)
-                    if let appointment {
+                    if let appointment = appointment {
                         Text(appointment.date.convertDateStringToReadableDate())
                             .bold()
+                    
                     }
                 }
             }

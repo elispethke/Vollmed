@@ -2,8 +2,9 @@
 //  MyAppointmentsView.swift
 //  Vollmed
 //
-//  Created by Elisangela Pethke on 14.02.24.
+//  Created by Elisangela Pethke on 03.05.24.
 //
+
 import SwiftUI
 
 struct MyAppointmentsView: View {
